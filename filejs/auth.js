@@ -1,44 +1,88 @@
-// auth.js (Phần đầu giữ nguyên)
+// auth.js
 
+// -----------------------------------------------------
+// CẤU HÌNH HẰNG SỐ
+// -----------------------------------------------------
 const AUTH_KEY = 'isAuthenticated';
-const REDIRECT_PAGE = 'index.html';
+// Đã sửa đường dẫn, giả định các file HTML nằm trong cùng thư mục (filehtml/)
+const REDIRECT_PAGE = 'index.html'; 
 const LOGIN_PAGE = 'dangnhap.html';
 
-// Tạo tài khoản admin mặc định nếu chưa có
+// -----------------------------------------------------
+// KHỞI TẠO DỮ LIỆU NGƯỜI DÙNG MẶC ĐỊNH
+// -----------------------------------------------------
+
 const defaultAdmin = { username: "admin", password: "123456", role: "admin" };
-if (!localStorage.getItem("users")) {
-    localStorage.setItem("users", JSON.stringify([defaultAdmin]));
+const defaultShipper = { username: "shipper", password: "123", role: "shipper" };
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let shouldUpdateStorage = false;
+
+// Thêm Admin nếu chưa có
+if (!users.find(u => u.username === defaultAdmin.username)) {
+    users.push(defaultAdmin);
+    shouldUpdateStorage = true;
 }
 
+// Thêm Shipper nếu chưa có
+if (!users.find(u => u.username === defaultShipper.username)) {
+    users.push(defaultShipper);
+    shouldUpdateStorage = true;
+}
+
+if (shouldUpdateStorage) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
+
+// -----------------------------------------------------
+// CHỨC NĂNG XÁC THỰC
+// -----------------------------------------------------
+
 /**
- * Kiểm tra trạng thái đăng nhập
+ * Kiểm tra trạng thái đăng nhập VÀ vai trò
  * @param {boolean} isLoginPage - true nếu đang ở trang đăng nhập
  */
 function checkAuth(isLoginPage = false) {
     const isLoggedIn = localStorage.getItem(AUTH_KEY) === 'true';
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentPath = window.location.pathname.split('/').pop(); 
 
     if (isLoginPage) {
-        // Nếu đã login và đang ở login page, chuyển về index.html (hoặc theo role)
+        // Nếu đã login và đang ở login page, chuyển về trang theo vai trò
         if (isLoggedIn && currentUser) {
              if (currentUser.role === 'admin') {
-                window.location.href = 'admin.html';
-            } else if (currentUser.role === 'shipper') {
-                window.location.href = 'shipper.html';
-            } else {
-                window.location.href = REDIRECT_PAGE;
-            }
+                 window.location.href = 'admin.html';
+             } else if (currentUser.role === 'shipper') {
+                 window.location.href = 'shipper.html';
+             } else {
+                 window.location.href = REDIRECT_PAGE; 
+             }
         }
         return;
     }
 
-    // Trang cần bảo vệ
+    // --- LOGIC BẢO VỆ CÁC TRANG KHÔNG PHẢI ĐĂNG NHẬP ---
+    
+    // 1. Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
     if (!isLoggedIn || !currentUser) {
-        const currentPath = window.location.pathname.split('/').pop();
-        if (currentPath !== LOGIN_PAGE) {
+        if (currentPath !== LOGIN_PAGE) { 
             localStorage.setItem('redirectAfterLogin', currentPath);
         }
         window.location.href = LOGIN_PAGE;
+        return;
+    }
+
+    // 2. Kiểm tra quyền truy cập dựa trên vai trò (Bảo mật)
+    if (currentPath === 'admin.html' && currentUser.role !== 'admin') {
+        alert("Bạn không có quyền truy cập trang Admin!");
+        window.location.href = REDIRECT_PAGE;
+        return;
+    }
+    
+    if (currentPath === 'shipper.html' && currentUser.role !== 'shipper') {
+        alert("Bạn không có quyền truy cập trang Shipper!");
+        window.location.href = REDIRECT_PAGE;
+        return;
     }
 }
 
@@ -50,14 +94,8 @@ function handleLogin(e) {
     e.preventDefault();
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-    let users = JSON.parse(localStorage.getItem("users")) || [];
     
-    // Thêm tài khoản Shipper mẫu
-    let defaultShipper = { username: "shipper", password: "123", role: "shipper" };
-    if (!users.find(u => u.username === defaultShipper.username)) {
-        users.push(defaultShipper);
-        localStorage.setItem("users", JSON.stringify(users)); // Lưu lại danh sách nếu thêm shipper mẫu
-    }
+    const users = JSON.parse(localStorage.getItem("users")) || []; 
 
     const user = users.find(u => u.username === username && u.password === password);
 
@@ -65,13 +103,12 @@ function handleLogin(e) {
         localStorage.setItem(AUTH_KEY, 'true');
         localStorage.setItem('currentUser', JSON.stringify(user));
         
-        // LOGIC CHUYỂN HƯỚNG MỚI DỰA TRÊN VAI TRÒ
+        // LOGIC CHUYỂN HƯỚNG DỰA TRÊN VAI TRÒ
         if (user.role === 'admin') {
             window.location.href = 'admin.html';
         } else if (user.role === 'shipper') {
             window.location.href = 'shipper.html';
         } else {
-            // Vai trò 'user' thông thường
             const redirect = localStorage.getItem('redirectAfterLogin') || REDIRECT_PAGE;
             localStorage.removeItem('redirectAfterLogin');
             window.location.href = redirect;
@@ -83,7 +120,7 @@ function handleLogin(e) {
 }
 
 /**
- * Xử lý đăng ký (ĐÃ THÊM THAM SỐ VAI TRÒ)
+ * Xử lý đăng ký 
  */
 function handleRegister(username, password, role) {
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -91,7 +128,6 @@ function handleRegister(username, password, role) {
         alert("Tên đăng nhập này đã tồn tại!");
         return false;
     }
-    // Sử dụng vai trò được truyền vào
     users.push({ username, password, role: role }); 
     localStorage.setItem("users", JSON.stringify(users));
     alert("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
@@ -109,19 +145,23 @@ function handleLogout() {
 }
 
 // -----------------------------------------------------
-// LOGIC XỬ LÝ DOM VÀ CHUYỂN ĐỔI FORM (ĐÃ SỬA ĐỔI)
+// LOGIC XỬ LÝ DOM VÀ CHUYỂN ĐỔI FORM (ĐÃ SỬA LỖI ẨN/HIỆN)
 // -----------------------------------------------------
 
-// Lấy tên file hiện tại
 const currentPage = window.location.pathname.split('/').pop();
 const isLoginPage = currentPage === LOGIN_PAGE;
 
-// DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // LẤY CÁC FORM BÊN TRONG
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
     
-    // Các phần tử DOM mới
+    // LẤY CÁC SECTION BỌC NGOÀI (QUAN TRỌNG ĐỂ ẨN/HIỆN)
+    const loginSection = document.getElementById("loginSection");
+    const registerSection = document.getElementById("registerSection");
+    
+    // LẤY CÁC NÚT VÀ INPUT KHÁC
     const showRegisterUserBtn = document.getElementById("showRegisterUser");
     const showRegisterShipperBtn = document.getElementById("showRegisterShipper");
     const backToLoginBtn = document.getElementById("backToLogin");
@@ -132,11 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Xử lý form Login
     if (loginForm) loginForm.addEventListener("submit", handleLogin);
 
-    // Hàm chung để chuyển sang form đăng ký và thiết lập vai trò
+    /**
+     * Hàm chung để chuyển sang form đăng ký và thiết lập vai trò
+     * Thao tác trên Section để đảm bảo toàn bộ form được hiển thị
+     */
     function showRegisterForm(role) {
-        if (loginForm) loginForm.style.display = "none";
+        if (loginSection) loginSection.style.display = "none"; // ẨN SECTION Đăng nhập
         if (registerOptionsDiv) registerOptionsDiv.style.display = "none";
-        if (registerForm) registerForm.style.display = "block";
+        if (registerSection) registerSection.style.display = "block"; // HIỆN SECTION Đăng ký
         
         if (regRoleInput) regRoleInput.value = role;
         if (registerRoleDisplay) {
@@ -144,55 +187,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Xử lý chuyển đổi khi nhấn các nút đăng ký mới
-    if (showRegisterUserBtn && registerForm && loginForm) {
+    // Xử lý chuyển đổi khi nhấn các nút đăng ký
+    if (showRegisterUserBtn && registerSection && loginSection) {
         showRegisterUserBtn.addEventListener("click", e => {
             e.preventDefault();
             showRegisterForm('user');
         });
     }
     
-    if (showRegisterShipperBtn && registerForm && loginForm) {
+    if (showRegisterShipperBtn && registerSection && loginSection) {
          showRegisterShipperBtn.addEventListener("click", e => {
-            e.preventDefault();
-            showRegisterForm('shipper');
-        });
+             e.preventDefault();
+             showRegisterForm('shipper');
+         });
     }
 
     // Xử lý nút Quay lại đăng nhập
-    if (backToLoginBtn && registerForm && loginForm) {
+    if (backToLoginBtn && registerSection && loginSection) {
         backToLoginBtn.addEventListener("click", e => {
             e.preventDefault();
-            if (registerForm) registerForm.style.display = "none";
-            if (loginForm) loginForm.style.display = "block";
-            if (registerOptionsDiv) registerOptionsDiv.style.display = "block"; // Hiện lại các nút chọn vai trò
+            if (registerSection) registerSection.style.display = "none"; // ẨN SECTION Đăng ký
+            if (loginSection) loginSection.style.display = "block"; // HIỆN SECTION Đăng nhập
+            if (registerOptionsDiv) registerOptionsDiv.style.display = "block"; 
             if (registerForm) registerForm.reset();
         });
     }
 
 
-    // Xử lý form Register Submission
+    // Xử lý form Register Submission 
     if (registerForm) {
         registerForm.addEventListener("submit", e => {
             e.preventDefault();
             const username = document.getElementById("regUsername").value.trim();
             const password = document.getElementById("regPassword").value.trim();
-            const role = document.getElementById("regRole").value; // Lấy vai trò đã thiết lập
+            const confirmPassword = document.getElementById("regConfirmPassword").value.trim(); 
+            const role = document.getElementById("regRole").value; 
             
-            // Gọi hàm đăng ký với vai trò
+            // KIỂM TRA XÁC NHẬN MẬT KHẨU
+            if (password !== confirmPassword) {
+                alert("Mật khẩu và Xác nhận mật khẩu không khớp!");
+                return; 
+            }
+
             const success = handleRegister(username, password, role);
 
             // Đăng ký xong (thành công), quay lại đăng nhập
             if (success) {
                 if (registerForm) registerForm.reset();
-                if (registerForm) registerForm.style.display = "none";
-                if (loginForm) loginForm.style.display = "block";
-                if (registerOptionsDiv) registerOptionsDiv.style.display = "block"; // Hiện lại các nút chọn vai trò
+                if (registerSection) registerSection.style.display = "none"; // ẨN SECTION
+                if (loginSection) loginSection.style.display = "block"; // HIỆN SECTION
+                if (registerOptionsDiv) registerOptionsDiv.style.display = "block"; 
             }
         });
     }
 
-    // LOGIC KHẮC PHỤC LỖI: Chỉ gọi checkAuth(true) nếu đang ở trang đăng nhập.
+    // GỌI HÀM KIỂM TRA XÁC THỰC
     if (isLoginPage) {
         checkAuth(true); 
     } else {
