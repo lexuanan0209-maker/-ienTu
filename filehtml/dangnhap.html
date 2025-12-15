@@ -5,35 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập / Đăng ký</title>
     <link rel="stylesheet" href="../filecss/dangnhap.css">
-    <script src="../filejs/auth.js" defer></script>
+    <script src="../filejs/auth.js" defer></script> 
     <style>
-        /* CSS BỔ SUNG ĐỂ CĂN CHỈNH TIÊU ĐỀ VÀ NÚT ĐĂNG KÝ */
-        /* Cần thêm vào file CSS chính của bạn hoặc để trong <style> nếu bạn muốn nhanh */
-
-        /* Căn giữa tiêu đề chính của trang */
+        /* CSS BỔ SUNG ĐỂ CĂN CHỈNH TIÊU ĐỀ VÀ NÚT ĐĂNG KÝ (Đã giữ lại) */
         .login-container > h1 {
             text-align: center;
             color: #ff5722;
             font-size: 28px;
-            margin-bottom: 25px; /* Tạo khoảng cách với form */
-            width: 100%; /* Cần thiết nếu nó không phải là phần tử con trực tiếp của form */
+            margin-bottom: 25px; 
+            width: 100%; 
         }
 
-        /* Định nghĩa lại register-options để căn giữa nội dung */
         .register-options {
             padding-top: 20px;
-            text-align: center; /* Căn giữa nội dung văn bản */
+            text-align: center; 
         }
 
-        /* Đảm bảo các nút Đăng ký chiếm đủ chiều rộng (400px) và căn giữa */
         .register-options .login-btn {
-            max-width: 400px; /* Giữ kích thước bằng với form */
-            display: block; /* Cho phép căn giữa bằng margin auto */
+            max-width: 400px; 
+            display: block; 
             margin-left: auto;
             margin-right: auto;
         }
 
-        /* Căn giữa dòng văn bản "--- Đăng ký tài khoản mới ---" */
         .register-options p {
             max-width: 400px;
             margin-left: auto;
@@ -41,11 +35,19 @@
             text-align: center;
         }
 
-        /* Chỉnh lại khoảng cách cho nút Người vận chuyển */
         #showRegisterShipper {
-             margin-top: 10px; /* Thêm khoảng cách giữa 2 nút */
+             margin-top: 10px; 
         }
-
+        
+        /* Thêm style cơ bản cho form đăng ký mới */
+        #registerSection input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -62,12 +64,12 @@
 
                     <div class="input-group">
                         <label for="username">Tên đăng nhập hoặc Email:</label>
-                        <input type="text" id="username" name="username" required placeholder="Tài khoản mẫu: user@example.com">
+                        <input type="text" id="username" name="username" required placeholder="Tài khoản mẫu: admin/shipper">
                     </div>
 
                     <div class="input-group">
                         <label for="password">Mật khẩu:</label>
-                        <input type="password" id="password" name="password" required placeholder="Mật khẩu mẫu: password">
+                        <input type="password" id="password" name="password" required placeholder="Mật khẩu mẫu: 123456/123">
                     </div>
 
                     <button type="submit" class="login-btn">Đăng nhập</button>
@@ -88,8 +90,32 @@
             
         </div>
         
-        <section id="registerSection" style="display: none;">
-            </section>
+        <section id="registerSection" style="display: none; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);">
+            <form id="registerForm">
+                <h2>Đăng ký tài khoản <span id="registerRoleDisplay" style="color: #ff5722;">(Người dùng)</span></h2> 
+
+                <input type="hidden" id="regRole" name="role" value="user"> <div class="input-group">
+                    <label for="regUsername">Tên đăng nhập:</label>
+                    <input type="text" id="regUsername" name="username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="regPassword">Mật khẩu:</label>
+                    <input type="password" id="regPassword" name="password" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="regConfirmPassword">Xác nhận mật khẩu:</label>
+                    <input type="password" id="regConfirmPassword" name="confirmPassword" required>
+                </div>
+
+                <button type="submit" class="login-btn" style="background-color: #007bff;">Hoàn tất Đăng ký</button>
+                
+                <button type="button" class="login-btn" id="backToLogin" style="background-color: #6c757d; margin-top: 10px;">
+                    Quay lại Đăng nhập
+                </button>
+            </form>
+        </section>
 
     </main>
 </body>
