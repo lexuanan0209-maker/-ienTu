@@ -1,0 +1,109 @@
+/* chat.css */
+
+/* --------------------------- */
+/* TOÀN TRANG */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fef5f1;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------- */
+/* HEADER */
+.header {
+    background: #ff5722;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* Nút Đăng xuất trên Header */
+.header .logout-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    padding: 8px 15px;
+    background: #e0353f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .logout-btn:hover {
+    background: #c02d37;
+}
+
+/* --------------------------- */
+/* CHAT BOX */
+.chat-container { 
+    max-width: 600px; 
+    margin: 30px auto; 
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    background-color: #fff; 
+}
+
+#chatbox { 
+    height: 400px; 
+    overflow-y: auto; 
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    background-color: #f7f7f7; 
+    border-radius: 4px; 
+}
+
+.message { 
+    margin-bottom: 8px; 
+    padding: 8px; 
+    border-radius: 6px; 
+    max-width: 80%; 
+}
+
+.user-message { 
+    background-color: #007bff; 
+    color: white; 
+    margin-left: auto; 
+    text-align: right; 
+}
+
+.admin-message { 
+    background-color: #e2e6ea; 
+    color: #333; 
+    margin-right: auto; 
+    text-align: left; 
+}
+
+.message-form { 
+    display: flex; 
+}
+
+.message-form input { 
+    width: calc(100% - 70px); 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px 0 0 4px; 
+}
+
+.message-form button { 
+    width: 60px; 
+    padding: 10px; 
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    cursor: pointer; 
+    border-radius: 0 4px 4px 0; 
+}

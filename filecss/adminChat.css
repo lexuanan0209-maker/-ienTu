@@ -1,6 +1,87 @@
-/* adminChat.css
+/* =========================================== */
+/* === ADMIN CHAT PANEL CSS - HOÀN CHỈNH === */
+/* =========================================== */
 
-/* Cấu trúc chung */
+/* --------------------------- */
+/* TOÀN TRANG (từ style/admin.css) */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fef5f1;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------- */
+/* HEADER */
+.header {
+    background: #ff5722;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.header .logout-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 15px;
+    background: #e0353f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header .logout-btn:hover {
+    background: #c02d37;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* --------------------------- */
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: #fff;
+    padding: 10px 15px;
+    border-bottom: 2px solid #ff5722;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.navbar a {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #e0e0e0;
+}
+
+.navbar a.active {
+    background-color: #ff5722;
+    color: white;
+}
+
+/* --------------------------- */
+/* CHAT MAIN CONTAINER (Ưu tiên từ adminChat.css) */
 .chat-main-container {
     display: flex;
     max-width: 1200px;
@@ -12,12 +93,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Cột 1: Danh sách Khách hàng (Sidebar) */
+/* Sidebar - danh sách khách hàng */
 .chatlist-sidebar {
     width: 300px;
     border-right: 1px solid #ddd;
     background-color: #f8f8f8;
-    height: 600px; /* Chiều cao cố định */
+    height: 600px;
     overflow-y: auto;
 }
 
@@ -28,7 +109,7 @@
     border-bottom: 1px solid #ddd;
     background-color: #e9e9e9;
     color: #333;
-    position: sticky; /* Giữ tiêu đề cố định khi cuộn */
+    position: sticky;
     top: 0;
     z-index: 10;
 }
@@ -42,7 +123,7 @@
 }
 
 .user-chat-item strong {
-    color: #007bff; /* Màu xanh nổi bật cho tên */
+    color: #007bff;
 }
 
 .user-chat-item p {
@@ -57,7 +138,7 @@
 .user-chat-item.active {
     background-color: #e0e0e0;
     font-weight: bold;
-    border-left: 3px solid #ff5722; /* Thanh chỉ báo đang chọn */
+    border-left: 3px solid #ff5722;
 }
 
 .user-chat-item:hover {
@@ -65,7 +146,7 @@
 }
 
 .new-message-indicator {
-    background-color: #dc3545; /* Đỏ */
+    background-color: #dc3545;
     color: white;
     padding: 3px 8px;
     border-radius: 12px;
@@ -75,7 +156,7 @@
     font-weight: normal;
 }
 
-/* Cột 2: Khung Chat (Chat Window) */
+/* Chat window */
 .chat-window {
     flex-grow: 1;
     padding: 15px;
@@ -92,7 +173,6 @@
     color: #007bff;
 }
 
-/* Hộp hiển thị tin nhắn */
 #chatbox {
     flex-grow: 1;
     overflow-y: auto;
@@ -110,7 +190,7 @@
     font-style: italic;
 }
 
-/* Định dạng tin nhắn */
+/* Tin nhắn */
 .message {
     margin-bottom: 12px;
     padding: 10px;
@@ -121,7 +201,6 @@
     word-wrap: break-word;
 }
 
-/* Tin nhắn của Khách hàng (User - bên trái) */
 .user-message {
     background-color: #e2e6ea;
     color: #333;
@@ -130,9 +209,8 @@
     border-bottom-left-radius: 4px;
 }
 
-/* Tin nhắn của Admin (Admin - bên phải) */
 .admin-message {
-    background-color: #ff5722; /* Màu cam nổi bật */
+    background-color: #ff5722;
     color: white;
     margin-left: auto;
     text-align: right;

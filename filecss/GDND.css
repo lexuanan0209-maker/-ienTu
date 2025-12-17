@@ -309,3 +309,9 @@ body {
 .stars span.rated {
     color: #FFD700; /* Màu vàng Gold cho sao */
 }
+
+
+P::after
+{
+    
+}

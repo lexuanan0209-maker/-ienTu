@@ -11,6 +11,8 @@ body {
     background: #fef5f1;
     color: #333;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* --------------------------- */
@@ -49,7 +51,17 @@ body {
 }
 
 /* --------------------------- */
-/* TABS */
+/* NAVBAR / TABS */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: #fff;
+    padding: 10px 15px;
+    border-bottom: 2px solid #ff5722;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
 .tab-btn {
     background-color: #f1f1f1;
     border: none;
@@ -81,12 +93,27 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+/* Hiển thị tab mặc định */
+.tab-content[style*="display: block"] {
+    display: block;
+}
+
 /* Tiêu đề tab */
 #adminContent h2 {
     color: #ff5722;
     border-bottom: 2px solid #ffede3;
     padding-bottom: 5px;
     margin-top: 10px;
+}
+
+/* --------------------------- */
+/* ADMIN CONTAINER */
+.admin-container {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* --------------------------- */
@@ -113,6 +140,7 @@ th {
     color: white;
 }
 
+/* Bảng Quản lý đơn hàng */
 .order-table th:nth-child(1),
 .order-table td:nth-child(1) {
     width: 10%;
