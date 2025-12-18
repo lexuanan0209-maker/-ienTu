@@ -13,7 +13,11 @@
   <!-- PHẦN ĐẦU TRANG -->
   <header class="header">
     <h1>🛒 Giỏ hàng của bạn</h1>
-    <button onclick="handleLogout()" class="logout-btn">Đăng xuất</button>
+  
+    <div class="auth-actions">
+    <button onclick="goLogin()" class="logout-btn" id="loginBtn">Đăng nhập</button>
+    <button onclick="handleLogout()" class="logout-btn" id="logoutBtn">Đăng xuất</button>
+</div>
   </header>
 
   <!-- THANH ĐIỀU HƯỚNG -->
@@ -41,7 +45,8 @@
 
     <div class="cart-summary">
       <h2>Tổng cộng: <span id="totalPrice">0</span>đ</h2>
-      <button class="checkout-btn" onclick="checkout()">Thanh toán</button>
+      <button class="checkout-btn" onclick="if(requireLoginFeature('chức năng thanh toán')) checkout()">Thanh toán</button>
+
     </div>
   </section>
 </body>

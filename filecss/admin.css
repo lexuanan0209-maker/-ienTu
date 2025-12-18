@@ -21,12 +21,13 @@ body {
     background: #ff5722;
     color: white;
     padding: 20px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: 600;
     position: relative;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    /* 👇 quan trọng */
+    text-align: center;
 }
+
 
 .header .logout-btn {
     position: absolute;
@@ -49,6 +50,35 @@ body {
     background: #c02d37;
     transform: translateY(-50%) scale(1.05);
 }
+.header h1 {
+    font-size: 42px !important;  /* tăng to hơn */
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    line-height: 1.2;           /* giữ chữ gọn, không quá cao */
+}
+
+.home-btn {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-size: 14px;      /* 👈 nhỏ lại */
+    font-weight: 600;
+    padding: 6px 10px;
+
+    background-color: #2d89ef;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.home-btn:hover {
+    background-color: #1b5fbd;
+}
+
 
 /* --------------------------- */
 /* NAVBAR / TABS */
@@ -71,6 +101,9 @@ body {
     border-radius: 8px 8px 0 0;
     font-weight: 600;
     transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;    /* ĐỂ XÓA GẠCH CHÂN */
+    color: #333;              /* ĐỂ CHỮ THÀNH MÀU ĐEN/XÁM (thay vì xanh) */
+    display: inline-block;
 }
 
 .tab-btn:hover {
@@ -271,3 +304,4 @@ th {
 #cancelEdit:hover {
     background-color: #5a6268 !important;
 }
+

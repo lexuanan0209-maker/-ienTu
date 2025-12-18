@@ -62,7 +62,7 @@ body {
 /* Nút Đăng xuất trên Header */
 .header .logout-btn {
     position: absolute;
-    right: 20px;
+    /*right: 20px;*/
     top: 50%;
     transform: translateY(-50%);
     padding: 8px 15px;
@@ -210,7 +210,6 @@ body {
     border-radius: 6px;
 }
 
-/* --------------------------- */
 /* DANH SÁCH SẢN PHẨM (Product List) */
 .product-list {
     flex: 1;
@@ -399,4 +398,14 @@ footer {
     margin-top: auto;
     border-top: 1px solid #ffede3;
     font-size: 14px;
+}
+#adminBtn {
+    left: 20px !important;  /* Đẩy sát lề trái 20px */
+    right: auto !important; /* Hủy bỏ lệnh bám lề phải */
+    background: #ca9137 !important; /* Màu xanh lá cho dễ phân biệt */
+}
+
+/* Giữ nút Login và Logout ở bên phải */
+#loginBtn, #logoutBtn {
+    right: 20px !important;
 }

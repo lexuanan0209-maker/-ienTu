@@ -1,90 +1,78 @@
-// hoso.js - Xử lý logic chỉnh sửa và lưu trữ hồ sơ
+// hoso.js - GỌN GÀNG, GIỮ NGUYÊN TÍNH NĂNG
 
 const CURRENT_USER_KEY = 'currentUser';
-const USERS_STORAGE_KEY = 'users'; 
-// KHÔNG CẦN KHAI BÁO LOGIN_PAGE (vì nó đã có trong auth.js)
+const USERS_STORAGE_KEY = 'users';
 
-
-// --- 1. Load thông tin cũ vào form ---
+// --- Load dữ liệu profile ---
 function loadProfileData() {
     const currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
-    
-    if (!currentUser) {
-        // Sử dụng biến toàn cục LOGIN_PAGE từ auth.js
-        if (typeof LOGIN_PAGE !== 'undefined') {
-            window.location.href = LOGIN_PAGE;
-        } else {
-            window.location.href = 'dangnhap.html';
-        }
-        return; 
-    } 
+    if (!currentUser) return window.location.href = typeof LOGIN_PAGE !== 'undefined' ? LOGIN_PAGE : 'dangnhap.html';
 
     const userNameInput = document.getElementById('userName');
     const userPhoneInput = document.getElementById('userPhone');
-    
-    // HIỂN THỊ TÊN ĐƯỢC LƯU TRONG TRƯỜNG 'displayName'
-    if (userNameInput) {
-        // Ưu tiên displayName, nếu không có thì dùng username (tên đăng nhập)
-        userNameInput.value = currentUser.displayName || currentUser.username || '';
-    }
-    if (userPhoneInput) {
-        userPhoneInput.value = currentUser.phone || '';
-    }
-    
-    // Giả định cập nhật Avatar
+    if (userNameInput) userNameInput.value = currentUser.displayName || currentUser.username || '';
+    if (userPhoneInput) userPhoneInput.value = currentUser.phone || '';
+
     const currentAvatarEl = document.getElementById('currentAvatar');
-    if (currentAvatarEl && currentUser.avatarUrl) {
-        currentAvatarEl.src = currentUser.avatarUrl;
-    }
+    if (currentAvatarEl && currentUser.avatarUrl) currentAvatarEl.src = currentUser.avatarUrl;
 }
 window.loadProfileData = loadProfileData;
 
-
-// --- 2. Xử lý sự kiện Submit Form (CHỈ CẬP NHẬT TÊN HIỂN THỊ VÀ PHONE) ---
-function handleProfileSubmit(event) {
-    event.preventDefault(); // QUAN TRỌNG: Ngăn chặn reload trang
-
-    const newDisplayName = document.getElementById('userName').value.trim();
+// --- Submit form profile ---
+function handleProfileSubmit(e) {
+    e.preventDefault();
+    const newName = document.getElementById('userName').value.trim();
     const newPhone = document.getElementById('userPhone').value.trim();
-    
-    let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    const currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    if (!currentUser) return alert('Lỗi: Không tìm thấy thông tin người dùng.');
 
-    if (currentUser) {
-        let allUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
+    currentUser.displayName = newName;
+    currentUser.phone = newPhone;
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
 
-        // 1. CẬP NHẬT currentUser TẠM THỜI
-        currentUser.displayName = newDisplayName; // Tên hiển thị mới
-        currentUser.phone = newPhone; 
-        
-        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser)); 
-
-        // 2. CẬP NHẬT DANH SÁCH USERS VĨNH VIỄN
-        const userIndex = allUsers.findIndex(u => u.username === currentUser.username); 
-
-        if (userIndex !== -1) {
-            allUsers[userIndex].displayName = newDisplayName; 
-            allUsers[userIndex].phone = newPhone; 
-            // Đảm bảo username (tên đăng nhập) KHÔNG BỊ THAY ĐỔI
-            
-            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(allUsers));
-        } else {
-            console.warn('Cảnh báo: Không tìm thấy người dùng trong danh sách Users để lưu vĩnh viễn.');
-        }
-
-        alert('Cập nhật hồ sơ thành công!');
-        window.location.href = 'GDND.html'; 
-    } else {
-        alert('Lỗi: Không tìm thấy thông tin người dùng để cập nhật.');
+    const allUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
+    const idx = allUsers.findIndex(u => u.username === currentUser.username);
+    if (idx !== -1) {
+        allUsers[idx].displayName = newName;
+        allUsers[idx].phone = newPhone;
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(allUsers));
     }
+    alert('Cập nhật hồ sơ thành công!');
+    window.location.href = 'GDND.html';
 }
-window.handleProfileSubmit = handleProfileSubmit; // Xuất hàm để có thể truy cập nếu cần
+window.handleProfileSubmit = handleProfileSubmit;
 
-// --- 3. Gắn sự kiện khi DOM được tải ---
+// --- Chọn ảnh đại diện ---
+function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const base64Img = evt.target.result;
+        const currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || {};
+        currentUser.avatarUrl = base64Img;
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+
+        const currentAvatarEl = document.getElementById('currentAvatar');
+        if (currentAvatarEl) currentAvatarEl.src = base64Img;
+
+        const allUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
+        const idx = allUsers.findIndex(u => u.username === currentUser.username);
+        if (idx !== -1) {
+            allUsers[idx].avatarUrl = base64Img;
+            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(allUsers));
+        }
+    };
+    reader.readAsDataURL(file);
+}
+window.handleAvatarChange = handleAvatarChange;
+
+// --- DOM Loaded ---
 document.addEventListener('DOMContentLoaded', () => {
-    loadProfileData(); 
-
+    loadProfileData();
     const form = document.getElementById('profileEditForm');
-    if (form) {
-        form.addEventListener('submit', handleProfileSubmit);
-    }
+    if (form) form.addEventListener('submit', handleProfileSubmit);
+
+    const avatarInput = document.getElementById('avatarInput');
+    if (avatarInput) avatarInput.addEventListener('change', handleAvatarChange);
 });

@@ -8,25 +8,34 @@
     <script src="../filejs/auth.js"></script>
     <script src="../filejs/chuyendoi.js"></script>
 </head>
-
 <body onload="checkAuth()">
 
+    <!-- HEADER -->
     <header class="header">
         <h1>🛍️ Cửa hàng trực tuyến</h1>
+
+        <!-- Search -->
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
             <button onclick="searchProduct()">Tìm</button>
-            
         </div>
-        <button onclick="handleLogout()" class="logout-btn">Đăng xuất</button>
+
+        <!-- Auth Buttons -->
+        <div class="auth-actions">
+            <button onclick="goAdmin()" id="adminBtn" class="logout-btn" style="display:none;">Admin</button>
+            <button onclick="goLogin()" id="loginBtn" class="logout-btn">Đăng nhập</button>
+            <button onclick="handleLogout()" id="logoutBtn" class="logout-btn" style="display:none;">Đăng xuất</button>
+        </div>
     </header>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="active">🏠 Trang chủ</a>
         <a href="giohang.html">🛒 Giỏ hàng</a>
         <a href="GDND.html">👤 Người dùng</a>
 
         <div class="sort-filter-group">
+            <!-- Sort by price -->
             <label for="sort-price" class="sort-label">Sắp xếp theo:</label>
             <select id="sort-price" onchange="sortProducts()">
                 <option value="">Giá (Mặc định)</option>
@@ -34,19 +43,24 @@
                 <option value="desc">Giá (Giảm dần)</option>
             </select>
 
+            <!-- Filter by price range -->
             <label for="filter-price-range" class="sort-label">Khoảng giá:</label>
             <select id="filter-price-range" onchange="filterProducts()">
                 <option value="">Tất cả</option>
                 <option value="low">Dưới 3.000.000₫</option>
                 <option value="high">Trên 3.000.000₫</option>
             </select>
-            
+
+            <!-- Filter buttons -->
             <button class="filter-btn" onclick="filterProducts('popular')">Được mua nhiều</button>
             <button class="filter-btn" onclick="filterProducts('newest')">Mới nhất</button>
         </div>
     </nav>
 
+    <!-- MAIN CONTENT -->
     <main class="main-container">
+
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <h3>📂 Danh mục</h3>
             <ul class="category-list">
@@ -60,9 +74,11 @@
             </ul>
         </aside>
 
+        <!-- PRODUCT LIST -->
         <section class="product-list" id="productList"></section>
     </main>
 
+    <!-- CHAT BOX -->
     <div class="chat-box" id="chatBox">
         <div class="chat-header" onclick="toggleChat()">💬 Chat với Admin</div>
         <div class="chat-body" id="chatBody">
@@ -73,8 +89,6 @@
             <button onclick="sendMessage()">Gửi</button>
         </div>
     </div>
-
-    
 
 </body>
 </html>
