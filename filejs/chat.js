@@ -100,19 +100,28 @@ window.loadChat = loadChat;
 
 function sendMessage(event, role, targetUserId = CURRENT_USER_ID) {
     event.preventDefault();
-    const messageInput = document.getElementById('messageInput');
-    const text = messageInput.value.trim();
 
+    // 🔒 CHẶN KHI CHƯA ĐĂNG NHẬP
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+        return;
+    }
+
+    const messageInput = document.getElementById('messageInput');
+    if (!messageInput) return;
+
+    const text = messageInput.value.trim();
     if (!text) return;
 
+    // Xác định người gửi
     const senderRole = role === 'user' ? 'user' : 'admin_system';
-    // Khách hàng gửi cho chính mình (CURRENT_USER_ID); Admin gửi cho targetUserId
-    const finalTargetId = role === 'user' ? CURRENT_USER_ID : targetUserId; 
+    const finalTargetId = role === 'user' ? CURRENT_USER_ID : targetUserId;
 
     const newMessage = {
         id: Date.now(),
         sender: senderRole,
-        userId: finalTargetId, 
+        userId: finalTargetId,
         timestamp: new Date().toLocaleTimeString(),
         text: text
     };
@@ -121,17 +130,18 @@ function sendMessage(event, role, targetUserId = CURRENT_USER_ID) {
     history.push(newMessage);
     saveChatHistory(finalTargetId, history);
 
-    // Tải lại giao diện chat
+    // Load lại giao diện chat
     loadChat(role, finalTargetId);
 
-    // Xóa input
+    // Clear input
     messageInput.value = '';
-    
-    // Kích hoạt event để Admin Dashboard biết có tin nhắn mới (chỉ khi Khách hàng gửi)
+
+    // Báo có tin nhắn mới cho Admin
     if (role === 'user') {
-         window.dispatchEvent(new Event('newMessage'));
+        window.dispatchEvent(new Event('newMessage'));
     }
 }
+
 window.sendMessage = sendMessage;
 
 // *** LƯU Ý QUAN TRỌNG: BỎ PHẦN setInterval CŨ Ở ĐÂY VÌ NÓ GÂY LỖI LOGIC ADMIN ***

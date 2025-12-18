@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,11 +9,15 @@
     <script src="../filejs/GDND.js" defer></script>
     <script src="../filejs/rating.js" defer></script>
 </head>
-
 <body onload="checkAuth()">
+
     <header class="header">
         <h1>👤 Thông tin người dùng</h1>
-        <button onclick="handleLogout()" class="logout-btn">Đăng xuất</button>
+        <div class="auth-actions">
+            <button onclick="goLogin()" class="logout-btn" id="loginBtn">Đăng nhập</button>
+            <button onclick="goAdmin()" class="logout-btn" id="adminBtn" style="display:none;">Admin</button>
+            <button onclick="handleLogout()" class="logout-btn" id="logoutBtn">Đăng xuất</button>
+        </div>
     </header>
 
     <nav class="navbar">
@@ -26,7 +29,9 @@
     <section class="user-container">
 
         <div class="user-profile user-section">
-            <img src="https://via.placeholder.com/100/40e0d0/ffffff?text=AVT" alt="Avatar người dùng" class="avatar-large">
+            <img src="https://via.placeholder.com/100/40e0d0/ffffff?text=AVT" 
+                 alt="Avatar người dùng" 
+                 class="avatar-large">
             <div class="user-details">
                 <h2 id="userNameDisplay">Nguyễn Văn A <span class="verified-icon">✅</span></h2>
                 <p id="userPhoneDisplay">Số điện thoại: Chưa cập nhật</p>
@@ -63,7 +68,7 @@
         <div class="user-section">
             <h3>💡 Có thể bạn cũng thích</h3>
             <div class="suggest-products" id="suggest-products">
-                </div>
+            </div>
         </div>
 
     </section>
@@ -84,6 +89,6 @@
             </div>
         </div>
     </div>
-</body>
 
+</body>
 </html>

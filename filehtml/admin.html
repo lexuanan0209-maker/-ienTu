@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../filecss/admin.css">
-    <script src="../filejs/auth.js"></script>
-    <script src="../filejs/chuyendoi.js"></script> 
+
+    <!-- Script dùng defer để đảm bảo DOM load trước khi JS chạy -->
+    <script src="../filejs/auth.js" defer></script>
+    <script src="../filejs/chuyendoi.js" defer></script>
     <script src="../filejs/admin.js" defer></script>
 </head>
 
-<body onload="checkAuth(); checkAdminRole()">
+<body onload="checkAuth()">
+
     <header class="header">
+        <a href="index.html" class="home-btn">🏠 Trang chủ</a>
         <h1>👨‍💼 ADMIN DASHBOARD</h1>
         <button onclick="handleLogout()" class="logout-btn">Đăng xuất</button>
     </header>
@@ -41,8 +45,7 @@
                             <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tbody id="orderList">
-                    </tbody>
+                    <tbody id="orderList"></tbody>
                 </table>
             </div>
 
@@ -92,8 +95,7 @@
                             <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tbody id="productListManagement">
-                    </tbody>
+                    <tbody id="productListManagement"></tbody>
                 </table>
             </div>
 
@@ -110,8 +112,7 @@
                             <th>Người dùng</th>
                         </tr>
                     </thead>
-                    <tbody id="feedbackList">
-                    </tbody>
+                    <tbody id="feedbackList"></tbody>
                 </table>
             </div>
 
